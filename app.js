@@ -279,6 +279,14 @@
       .map((p) => "<p>" + esc(p) + "</p>")
       .join("");
     const sources = (story.sources || []).map(sourceMarkup).join("");
+    const beats = (story.beats || [])
+      .map(function (beat) {
+        return "<li>" + esc(beat) + "</li>";
+      })
+      .join("");
+    const beatsBlock = beats
+      ? '<div class="beats"><p class="beats-label">Beats</p><ol>' + beats + "</ol></div>"
+      : "";
     readerBody.innerHTML =
       '<p class="reader-kicker"><span class="' +
       kindClass +
@@ -294,6 +302,7 @@
       '<div class="story-body">' +
       paragraphs +
       "</div>" +
+      beatsBlock +
       '<button type="button" class="copy-btn' +
       (crime ? " is-crime" : "") +
       '" data-copy="1">Copy story</button>' +
