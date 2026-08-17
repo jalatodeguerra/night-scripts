@@ -42,6 +42,7 @@
       story.title,
       story.country,
       story.hook,
+      story.story,
       story.kindLabel,
       story.year,
       story.id,
@@ -61,7 +62,7 @@
       .map((story) => {
         const crime = story.kind === "true-crime";
         const country = story.country.split("(")[0].split(" — ")[0].trim();
-        const meta = [country, story.duration].filter(Boolean).join(" · ");
+        const meta = country;
         return (
           '<a class="card' +
           (crime ? " is-crime" : "") +
@@ -110,14 +111,14 @@
   function renderReader(story) {
     if (!story) {
       readerBody.innerHTML =
-        '<p class="missing">This script is not in the archive.</p>';
+        '<p class="missing">This story is not in the archive.</p>';
       return;
     }
     const crime = story.kind === "true-crime";
     const kindClass = crime ? "kind-blood" : "kind-gold";
     const kickerBits = [story.kindLabel, story.country];
     if (story.year) kickerBits.push(story.year);
-    const paragraphs = story.script
+    const paragraphs = (story.story || "")
       .split(/\n\n+/)
       .map((p) => "<p>" + esc(p) + "</p>")
       .join("");
@@ -133,18 +134,12 @@
       "<h1>" +
       esc(story.title) +
       "</h1>" +
-      '<p class="hook-block' +
-      (crime ? " is-crime" : "") +
-      '">' +
-      esc(story.hook) +
-      "</p>" +
-      '<p class="script-label">Script</p>' +
-      '<div class="script">' +
+      '<div class="story-body">' +
       paragraphs +
       "</div>" +
       '<button type="button" class="copy-btn' +
       (crime ? " is-crime" : "") +
-      '" data-copy="1">Copy script</button>' +
+      '" data-copy="1">Copy story</button>' +
       '<div class="notes">' +
       "<details><summary>Must-keep</summary><p class=\"note-body\">" +
       esc(story.mustKeep) +
@@ -167,11 +162,11 @@
     }, 1800);
   }
 
-  async function copyScript(story) {
-    const text = story.script || "";
+  async function copyStory(story) {
+    const text = story.story || "";
     try {
       await navigator.clipboard.writeText(text);
-      showToast("Script copied");
+      showToast("Story copied");
     } catch (err) {
       const area = document.createElement("textarea");
       area.value = text;
@@ -182,7 +177,7 @@
       area.select();
       try {
         document.execCommand("copy");
-        showToast("Script copied");
+        showToast("Story copied");
       } catch (fallbackErr) {
         showToast("Copy failed");
       }
@@ -244,7 +239,7 @@
     if (!button) return;
     const id = storyIdFromHash();
     const story = stories.find((item) => item.id === id);
-    if (story) copyScript(story);
+    if (story) copyStory(story);
   });
 
   window.addEventListener("hashchange", applyRoute);

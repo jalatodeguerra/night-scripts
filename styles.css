@@ -143,6 +143,13 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
+.tagline {
+  margin: 2px 0 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
 .search-wrap {
   position: relative;
   display: block;
@@ -412,27 +419,18 @@ summary:focus-visible {
   border-left-color: #4a4a50;
 }
 
-.script-label {
-  margin: 0 0 13px;
-  color: var(--faint);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.script {
+.story-body {
   color: var(--text);
   font-size: 1.04rem;
   line-height: 1.78;
   letter-spacing: -0.004em;
 }
 
-.script p {
+.story-body p {
   margin: 0 0 1.18em;
 }
 
-.script p:last-child {
+.story-body p:last-child {
   margin-bottom: 0;
 }
 
