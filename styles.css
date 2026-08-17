@@ -139,6 +139,13 @@ summary:focus-visible {
   gap: 12px;
 }
 
+.topbar-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
 .filters-toggle {
   flex: none;
   min-height: 44px;
@@ -399,7 +406,11 @@ summary:focus-visible {
   -webkit-backdrop-filter: blur(18px) saturate(110%);
 }
 
-.reader-bar > * {
+.reader-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: min(100%, 760px);
 }
 

@@ -26,7 +26,10 @@
           <p class="wordmark">Night Scripts</p>
           <p class="tagline">Stories. You write the script.</p>
         </div>
-        <button type="button" id="filters-toggle" class="filters-toggle" aria-expanded="true" aria-controls="filter-panel">Filters</button>
+        <div class="topbar-actions">
+          <button type="button" id="random-story" class="filters-toggle">Random</button>
+          <button type="button" id="filters-toggle" class="filters-toggle" aria-expanded="true" aria-controls="filter-panel">Filters</button>
+        </div>
       </div>
       <div id="filter-panel" class="filter-panel">
         <label class="search-wrap">
@@ -68,7 +71,10 @@
 
   <div id="reader" class="reader" hidden>
     <div class="reader-bar">
-      <a class="back" id="back" href="#/">Back</a>
+      <div class="reader-bar-inner">
+        <a class="back" id="back" href="#/">Back</a>
+        <button type="button" id="random-story-reader" class="filters-toggle">Random</button>
+      </div>
     </div>
     <article id="reader-body" class="reader-body"></article>
   </div>

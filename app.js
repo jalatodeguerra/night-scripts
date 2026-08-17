@@ -130,6 +130,18 @@
     );
   }
 
+  function openRandomStory() {
+    const pool = visibleStories();
+    const list = pool.length ? pool : stories;
+    if (!list.length) return;
+    const current = storyIdFromHash();
+    const choices =
+      list.length > 1 ? list.filter((story) => story.id !== current) : list;
+    const pick = choices[Math.floor(Math.random() * choices.length)];
+    lastFocus = pick.id;
+    location.hash = "#/story/" + encodeURIComponent(pick.id);
+  }
+
   function uniqueSorted(values) {
     return Array.from(new Set(values.filter(Boolean))).sort(function (a, b) {
       return a.localeCompare(b);
@@ -496,6 +508,11 @@
       applyFiltersOpen(open);
     });
   }
+
+  const randomBtn = $("random-story");
+  const randomReaderBtn = $("random-story-reader");
+  if (randomBtn) randomBtn.addEventListener("click", openRandomStory);
+  if (randomReaderBtn) randomReaderBtn.addEventListener("click", openRandomStory);
 
   loadDone();
   loadStories()
