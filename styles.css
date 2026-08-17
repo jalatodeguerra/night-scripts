@@ -132,6 +132,48 @@ summary:focus-visible {
   -webkit-backdrop-filter: blur(18px) saturate(110%);
 }
 
+.topbar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filters-toggle {
+  flex: none;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface-1);
+  color: var(--text);
+  font: 600 0.78rem/1 Figtree, Inter, ui-sans-serif, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.filters-toggle:hover {
+  border-color: #303036;
+  background: #171719;
+  color: var(--text-strong);
+}
+
+.filters-toggle[aria-expanded="true"] {
+  border-color: #4b4b52;
+  color: var(--text-strong);
+}
+
+.filter-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.topbar.is-collapsed .filter-panel {
+  display: none;
+}
+
 .wordmark {
   margin: 0;
   color: var(--text-strong);
@@ -486,6 +528,35 @@ summary:focus-visible {
   opacity: 0.55;
 }
 
+.resume {
+  margin: 18px 0 28px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-1);
+}
+
+.resume-label,
+.story-label {
+  margin: 0 0 8px;
+  color: var(--faint);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.resume p {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.story-label {
+  margin-bottom: 12px;
+}
+
 .notes {
   margin-top: 30px;
   border-top: 1px solid var(--line);
@@ -639,9 +710,7 @@ summary:focus-visible {
 
 @media (min-width: 720px) {
   .topbar {
-    grid-template-columns: auto minmax(260px, 1fr) auto;
-    align-items: center;
-    gap: 18px;
+    gap: 14px;
     padding-top: calc(11px + var(--safe-t));
     padding-bottom: 11px;
   }
@@ -652,7 +721,6 @@ summary:focus-visible {
 
   .search-wrap {
     width: min(100%, 440px);
-    justify-self: center;
   }
 
   .chips {
@@ -662,12 +730,6 @@ summary:focus-visible {
   .chip {
     flex: none;
     min-width: 68px;
-  }
-
-  .place-filters,
-  .progress-chips,
-  .filter-count {
-    grid-column: 1 / -1;
   }
 
   .place-filters {

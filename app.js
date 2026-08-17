@@ -2,6 +2,7 @@
   "use strict";
 
   const DONE_KEY = "night-scripts-done";
+  const FILTERS_KEY = "night-scripts-filters-open";
   const $ = (id) => document.getElementById(id);
   const archive = $("archive");
   const listEl = $("list");
@@ -10,6 +11,8 @@
   const continentEl = $("continent");
   const countryEl = $("country");
   const countEl = $("filter-count");
+  const topbar = document.querySelector(".topbar");
+  const filtersToggle = $("filters-toggle");
   const reader = $("reader");
   const readerBody = $("reader-body");
   const copyStatus = $("copy-status");
@@ -300,7 +303,13 @@
       esc(story.title) +
       "</h1>" +
       doneMarkup(story.id, "reader-done") +
+      (story.hook
+        ? '<section class="resume"><p class="resume-label">Summary</p><p>' +
+          esc(story.hook) +
+          "</p></section>"
+        : "") +
       '<div class="story-body">' +
+      '<p class="story-label">Story</p>' +
       paragraphs +
       "</div>" +
       beatsBlock +
@@ -459,6 +468,33 @@
       const raw = $("stories-data").textContent;
       return JSON.parse(raw);
     }
+  }
+
+  function filtersOpen() {
+    try {
+      const raw = localStorage.getItem(FILTERS_KEY);
+      if (raw === "0") return false;
+      if (raw === "1") return true;
+    } catch (err) {}
+    return window.matchMedia("(min-width: 720px)").matches;
+  }
+
+  function applyFiltersOpen(open) {
+    if (!topbar || !filtersToggle) return;
+    topbar.classList.toggle("is-collapsed", !open);
+    filtersToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    filtersToggle.textContent = open ? "Hide filters" : "Filters";
+    try {
+      localStorage.setItem(FILTERS_KEY, open ? "1" : "0");
+    } catch (err) {}
+  }
+
+  if (filtersToggle) {
+    applyFiltersOpen(filtersOpen());
+    filtersToggle.addEventListener("click", () => {
+      const open = filtersToggle.getAttribute("aria-expanded") !== "true";
+      applyFiltersOpen(open);
+    });
   }
 
   loadDone();

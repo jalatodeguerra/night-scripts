@@ -21,40 +21,45 @@
 
   <div id="archive" class="archive">
     <header class="topbar">
-      <div class="brand">
-        <p class="wordmark">Night Scripts</p>
-        <p class="tagline">Stories. You write the script.</p>
+      <div class="topbar-head">
+        <div class="brand">
+          <p class="wordmark">Night Scripts</p>
+          <p class="tagline">Stories. You write the script.</p>
+        </div>
+        <button type="button" id="filters-toggle" class="filters-toggle" aria-expanded="true" aria-controls="filter-panel">Filters</button>
       </div>
-      <label class="search-wrap">
-        <span class="visually-hidden">Search stories</span>
-        <input type="search" id="search" placeholder="Search stories" autocomplete="off" enterkeyhint="search">
-      </label>
-      <div class="chips" role="group" aria-label="Filter stories">
-        <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">All</button>
-        <button type="button" class="chip" data-filter="folklore" aria-pressed="false">Folklore</button>
-        <button type="button" class="chip chip-crime" data-filter="true-crime" aria-pressed="false">True crime</button>
-        <button type="button" class="chip" data-filter="creepypasta" aria-pressed="false">Creepypasta</button>
-      </div>
-      <div class="place-filters">
-        <label class="select-wrap">
-          <span class="visually-hidden">Continent</span>
-          <select id="continent">
-            <option value="">All continents</option>
-          </select>
+      <div id="filter-panel" class="filter-panel">
+        <label class="search-wrap">
+          <span class="visually-hidden">Search stories</span>
+          <input type="search" id="search" placeholder="Search stories" autocomplete="off" enterkeyhint="search">
         </label>
-        <label class="select-wrap">
-          <span class="visually-hidden">Country</span>
-          <select id="country">
-            <option value="">All countries</option>
-          </select>
-        </label>
+        <div class="chips" role="group" aria-label="Filter stories">
+          <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-filter="folklore" aria-pressed="false">Folklore</button>
+          <button type="button" class="chip chip-crime" data-filter="true-crime" aria-pressed="false">True crime</button>
+          <button type="button" class="chip" data-filter="creepypasta" aria-pressed="false">Creepypasta</button>
+        </div>
+        <div class="place-filters">
+          <label class="select-wrap">
+            <span class="visually-hidden">Continent</span>
+            <select id="continent">
+              <option value="">All continents</option>
+            </select>
+          </label>
+          <label class="select-wrap">
+            <span class="visually-hidden">Country</span>
+            <select id="country">
+              <option value="">All countries</option>
+            </select>
+          </label>
+        </div>
+        <div class="chips progress-chips" role="group" aria-label="Progress">
+          <button type="button" class="chip is-on" data-progress="all" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-progress="todo" aria-pressed="false">To do</button>
+          <button type="button" class="chip" data-progress="done" aria-pressed="false">Done</button>
+        </div>
+        <p id="filter-count" class="filter-count"></p>
       </div>
-      <div class="chips progress-chips" role="group" aria-label="Progress">
-        <button type="button" class="chip is-on" data-progress="all" aria-pressed="true">All</button>
-        <button type="button" class="chip" data-progress="todo" aria-pressed="false">To do</button>
-        <button type="button" class="chip" data-progress="done" aria-pressed="false">Done</button>
-      </div>
-      <p id="filter-count" class="filter-count"></p>
     </header>
 
     <main id="list" class="list"></main>
