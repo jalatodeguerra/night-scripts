@@ -105,6 +105,7 @@ a:hover {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
@@ -143,8 +144,12 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
+.brand {
+  min-width: 0;
+}
+
 .tagline {
-  margin: 2px 0 10px;
+  margin: 2px 0 0;
   color: var(--muted);
   font-size: 0.78rem;
   letter-spacing: 0.02em;
@@ -236,6 +241,7 @@ summary:focus-visible {
 }
 
 .card {
+  position: relative;
   display: block;
   padding: 16px 16px 17px;
   border: 1px solid transparent;
@@ -244,6 +250,13 @@ summary:focus-visible {
   color: inherit;
   text-decoration: none;
   box-shadow: none;
+}
+
+.card-main {
+  display: block;
+  padding-right: 76px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .card.is-crime {
@@ -264,7 +277,8 @@ summary:focus-visible {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 8px;
+  min-width: 0;
+  margin: 0 0 8px;
   color: var(--faint);
   font-size: 0.75rem;
   font-weight: 500;
@@ -595,6 +609,7 @@ summary:focus-visible {
   .card,
   .chip,
   #search,
+  .place-filters select,
   .copy-btn,
   .back,
   .copy-status {
@@ -649,6 +664,20 @@ summary:focus-visible {
     min-width: 68px;
   }
 
+  .place-filters,
+  .progress-chips,
+  .filter-count {
+    grid-column: 1 / -1;
+  }
+
+  .place-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .progress-chips {
+    width: min(100%, 280px);
+  }
+
   .list {
     padding-top: 28px;
   }
@@ -686,7 +715,117 @@ summary:focus-visible {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .card:hover h2 {
+  .card:hover h2,
+  .card-main:hover h2 {
     color: #fff;
   }
+}
+
+.place-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.select-wrap {
+  display: block;
+  min-width: 0;
+}
+
+.place-filters select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 36px 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  outline: none;
+  background-color: var(--surface-1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23929297' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' d='M1.5 1.75 6 6.25 10.5 1.75'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  color: var(--text-strong);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.015);
+  font: 500 1rem/1.3 Figtree, Inter, ui-sans-serif, sans-serif;
+  color-scheme: dark;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.place-filters select:hover {
+  border-color: #303036;
+  background-color: #171719;
+}
+
+.place-filters select:focus {
+  border-color: #4b4b52;
+  background-color: var(--surface-2);
+  box-shadow: 0 0 0 1px #4b4b52;
+}
+
+.progress-chips {
+  width: 100%;
+}
+
+.filter-count {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.card > .done-check {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  z-index: 1;
+  margin: 0;
+}
+
+.done-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.done-check:hover {
+  color: var(--text-strong);
+  background: var(--surface-1);
+}
+
+.done-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #b8b8bd;
+}
+
+.card.is-done {
+  opacity: 0.5;
+}
+
+.card.is-done h2 {
+  color: var(--muted);
+}
+
+.reader-done {
+  margin: -6px 0 22px;
+  width: fit-content;
+  padding: 0 4px;
+  color: var(--muted);
 }

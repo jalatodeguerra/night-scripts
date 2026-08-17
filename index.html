@@ -21,8 +21,10 @@
 
   <div id="archive" class="archive">
     <header class="topbar">
-      <p class="wordmark">Night Scripts</p>
-      <p class="tagline">Stories. You write the script.</p>
+      <div class="brand">
+        <p class="wordmark">Night Scripts</p>
+        <p class="tagline">Stories. You write the script.</p>
+      </div>
       <label class="search-wrap">
         <span class="visually-hidden">Search stories</span>
         <input type="search" id="search" placeholder="Search stories" autocomplete="off" enterkeyhint="search">
@@ -32,6 +34,26 @@
         <button type="button" class="chip" data-filter="folklore" aria-pressed="false">Folklore</button>
         <button type="button" class="chip chip-crime" data-filter="true-crime" aria-pressed="false">True crime</button>
       </div>
+      <div class="place-filters">
+        <label class="select-wrap">
+          <span class="visually-hidden">Continent</span>
+          <select id="continent">
+            <option value="">All continents</option>
+          </select>
+        </label>
+        <label class="select-wrap">
+          <span class="visually-hidden">Country</span>
+          <select id="country">
+            <option value="">All countries</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips progress-chips" role="group" aria-label="Progress">
+        <button type="button" class="chip is-on" data-progress="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-progress="todo" aria-pressed="false">To do</button>
+        <button type="button" class="chip" data-progress="done" aria-pressed="false">Done</button>
+      </div>
+      <p id="filter-count" class="filter-count"></p>
     </header>
 
     <main id="list" class="list"></main>
@@ -53,6 +75,8 @@
     "id": "la-llorona",
     "title": "La Llorona (The Weeping Woman)",
     "country": "Mexico",
+    "continent": "North America",
+    "countryShort": "Mexico",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -70,6 +94,8 @@
     "id": "el-silbon",
     "title": "El Silbón (The Whistler)",
     "country": "Venezuela (Los Llanos; also eastern Colombia)",
+    "continent": "South America",
+    "countryShort": "Venezuela",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -86,6 +112,8 @@
     "id": "kuchisake-onna",
     "title": "Kuchisake-onna (口裂け女, Slit-Mouthed Woman)",
     "country": "Japan",
+    "continent": "Asia",
+    "countryShort": "Japan",
     "kind": "urban-legend",
     "kindLabel": "Urban legend",
     "year": "",
@@ -102,6 +130,8 @@
     "id": "pontianak",
     "title": "Pontianak / Kuntilanak",
     "country": "Malaysia / Indonesia / Singapore",
+    "continent": "Asia",
+    "countryShort": "Malaysia",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -118,6 +148,8 @@
     "id": "tokoloshe",
     "title": "Tokoloshe / Tikoloshe / uThikoloshe",
     "country": "South Africa (Nguni: Zulu, Xhosa; also Sotho thokolosi)",
+    "continent": "Africa",
+    "countryShort": "South Africa",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -134,6 +166,8 @@
     "id": "czarna-wolga",
     "title": "Czarna Wołga (The Black Volga)",
     "country": "Poland",
+    "continent": "Europe",
+    "countryShort": "Poland",
     "kind": "urban-legend",
     "kindLabel": "Urban legend",
     "year": "",
@@ -151,6 +185,8 @@
     "id": "spring-heeled-jack",
     "title": "Spring-heeled Jack",
     "country": "England",
+    "continent": "Europe",
+    "countryShort": "England",
     "kind": "urban-legend",
     "kindLabel": "Urban legend",
     "year": "",
@@ -167,6 +203,8 @@
     "id": "manananggal",
     "title": "Aswang — tell the Manananggal",
     "country": "Philippines (Visayas especially)",
+    "continent": "Asia",
+    "countryShort": "Philippines",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -183,6 +221,8 @@
     "id": "banshee",
     "title": "Banshee (bean sí / bean sídhe)",
     "country": "Ireland",
+    "continent": "Europe",
+    "countryShort": "Ireland",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "",
@@ -200,6 +240,8 @@
     "id": "bloody-mary",
     "title": "Bloody Mary (Mary Worth / Mary Whales)",
     "country": "United States",
+    "continent": "North America",
+    "countryShort": "United States",
     "kind": "urban-legend",
     "kindLabel": "Urban legend",
     "year": "",
@@ -217,6 +259,8 @@
     "id": "greenbrier-ghost",
     "title": "The Greenbrier Ghost",
     "country": "United States — Greenbrier County, West Virginia",
+    "continent": "North America",
+    "countryShort": "United States",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1897",
@@ -233,6 +277,8 @@
     "id": "phantom-of-heilbronn",
     "title": "The Phantom of Heilbronn",
     "country": "Germany",
+    "continent": "Europe",
+    "countryShort": "Germany",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1993–2009",
@@ -249,6 +295,8 @@
     "id": "brides-in-the-bath",
     "title": "The Brides in the Bath",
     "country": "England",
+    "continent": "Europe",
+    "countryShort": "England",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1912–1915",
@@ -265,6 +313,8 @@
     "id": "shark-arm-case",
     "title": "The Shark Arm case",
     "country": "Australia — Sydney",
+    "continent": "Oceania",
+    "countryShort": "Australia",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1935",
@@ -281,6 +331,8 @@
     "id": "blanche-monnier",
     "title": "La Séquestrée de Poitiers (Blanche Monnier)",
     "country": "France — Poitiers",
+    "continent": "Europe",
+    "countryShort": "France",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1870s–1901",
@@ -297,6 +349,8 @@
     "id": "dr-crippen",
     "title": "Dr. Crippen and the wireless manhunt",
     "country": "England → Canada",
+    "continent": "Europe",
+    "countryShort": "England",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1910",
@@ -313,6 +367,8 @@
     "id": "peuchen",
     "title": "Peuchen (Piuchén / Piwuchén)",
     "country": "Chile (Mapuche / Chilote)",
+    "continent": "South America",
+    "countryShort": "Chile",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "oral; written 1765–1916",
@@ -329,6 +385,8 @@
     "id": "la-tunda",
     "title": "La Tunda",
     "country": "Colombia (Afro-Pacific; also Ecuador)",
+    "continent": "South America",
+    "countryShort": "Colombia",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "oral; written 19th–20th c.",
@@ -346,6 +404,8 @@
     "id": "jiangshi",
     "title": "Jiangshi (僵尸, stiff corpse)",
     "country": "China",
+    "continent": "Asia",
+    "countryShort": "China",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "Qing literary peak, 1788–1798",
@@ -362,6 +422,8 @@
     "id": "churel",
     "title": "Churel (Chudail / Churail)",
     "country": "India (North India / South Asia)",
+    "continent": "Asia",
+    "countryShort": "India",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "older oral; Crooke 1894",
@@ -378,6 +440,8 @@
     "id": "madam-koi-koi",
     "title": "Madam Koi Koi (Madam Moke in Ghana)",
     "country": "Nigeria",
+    "continent": "Africa",
+    "countryShort": "Nigeria",
     "kind": "urban-legend",
     "kindLabel": "Urban legend",
     "year": "late 20th c. boarding-school lore",
@@ -394,6 +458,8 @@
     "id": "adze",
     "title": "Adze",
     "country": "Ghana / Togo (Ewe)",
+    "continent": "Africa",
+    "countryShort": "Ghana",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "older oral; recorded 1906–1911",
@@ -410,6 +476,8 @@
     "id": "soucouyant",
     "title": "Soucouyant (Ol’ Higue / Asema)",
     "country": "Trinidad and Tobago",
+    "continent": "Caribbean",
+    "countryShort": "Trinidad and Tobago",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "Afro-Caribbean syncretic; 19th–20th c. collections",
@@ -426,6 +494,8 @@
     "id": "rusalka",
     "title": "Rusalka (русалка; Ukrainian mavka)",
     "country": "Ukraine (East Slavic)",
+    "continent": "Europe",
+    "countryShort": "Ukraine",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "pre-Christian roots; 19th-c. ethnography",
@@ -443,6 +513,8 @@
     "id": "cheonyeo-gwisin",
     "title": "Cheonyeo-gwisin (처녀귀신, virgin ghost)",
     "country": "Korea",
+    "continent": "Asia",
+    "countryShort": "Korea",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "Joseon-era belief; tale collections to 1873",
@@ -459,6 +531,8 @@
     "id": "draugr",
     "title": "Draugr (haugbúi / aptrganga)",
     "country": "Iceland (Old Norse sagas)",
+    "continent": "Europe",
+    "countryShort": "Iceland",
     "kind": "folklore",
     "kindLabel": "Folklore",
     "year": "13th–14th c. sagas",
@@ -476,6 +550,8 @@
     "id": "crimen-de-cuenca",
     "title": "The Crime of Cuenca",
     "country": "Spain — Osa de la Vega / Tresjuncos, Cuenca",
+    "continent": "Europe",
+    "countryShort": "Spain",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1910–1926",
@@ -493,6 +569,8 @@
     "id": "pyjama-girl",
     "title": "The Pyjama Girl case",
     "country": "Australia — Albury, New South Wales",
+    "continent": "Oceania",
+    "countryShort": "Australia",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1934–1944",
@@ -510,6 +588,8 @@
     "id": "gouffe-trunk",
     "title": "The Gouffé trunk case",
     "country": "France — Paris / Millery",
+    "continent": "Europe",
+    "countryShort": "France",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1889–1891",
@@ -527,6 +607,8 @@
     "id": "nanavati-case",
     "title": "K. M. Nanavati v. State of Maharashtra",
     "country": "India — Bombay (Mumbai)",
+    "continent": "Asia",
+    "countryShort": "India",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1959–1964",
@@ -544,6 +626,8 @@
     "id": "snyder-gray",
     "title": "Ruth Snyder and Judd Gray",
     "country": "United States — Queens Village, New York",
+    "continent": "North America",
+    "countryShort": "United States",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1927–1928",
@@ -561,6 +645,8 @@
     "id": "jigsaw-murders-ruxton",
     "title": "The Jigsaw Murders (Buck Ruxton)",
     "country": "United Kingdom — Lancaster / Moffat",
+    "continent": "Europe",
+    "countryShort": "United Kingdom",
     "kind": "true-crime",
     "kindLabel": "True crime",
     "year": "1935–1936",

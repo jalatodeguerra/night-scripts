@@ -1,21 +1,30 @@
 (function () {
   "use strict";
 
+  const DONE_KEY = "night-scripts-done";
   const $ = (id) => document.getElementById(id);
   const archive = $("archive");
   const listEl = $("list");
   const emptyEl = $("empty");
   const searchEl = $("search");
+  const continentEl = $("continent");
+  const countryEl = $("country");
+  const countEl = $("filter-count");
   const reader = $("reader");
   const readerBody = $("reader-body");
   const copyStatus = $("copy-status");
-  const chips = Array.from(document.querySelectorAll(".chip"));
+  const chips = Array.from(document.querySelectorAll("[data-filter]"));
+  const progressChips = Array.from(document.querySelectorAll("[data-progress]"));
 
   let stories = [];
   let filter = "all";
+  let progress = "all";
+  let continent = "";
+  let country = "";
   let query = "";
   let lastFocus = null;
   let copyTimer = 0;
+  let doneIds = new Set();
 
   function esc(value) {
     return String(value)
@@ -23,6 +32,47 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  function loadDone() {
+    try {
+      const raw = localStorage.getItem(DONE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return;
+      doneIds = new Set(parsed.filter((id) => typeof id === "string"));
+    } catch (err) {
+      doneIds = new Set();
+    }
+  }
+
+  function saveDone() {
+    try {
+      localStorage.setItem(DONE_KEY, JSON.stringify(Array.from(doneIds)));
+    } catch (err) {
+      // Private mode or quota — keep the in-memory set.
+    }
+  }
+
+  function isDone(id) {
+    return doneIds.has(id);
+  }
+
+  function setDone(id, on) {
+    if (!id) return;
+    if (on) doneIds.add(id);
+    else doneIds.delete(id);
+    saveDone();
+    const card = listEl.querySelector('[data-id="' + id + '"]');
+    if (card) {
+      card.classList.toggle("is-done", on);
+      const box = card.querySelector('input[data-done="' + id + '"]');
+      if (box) box.checked = on;
+    }
+    const readerBox = reader.querySelector('input[data-done="' + id + '"]');
+    if (readerBox) readerBox.checked = on;
+    updateCount();
+    if (progress !== "all" && !storyIdFromHash()) renderList();
   }
 
   function storyIdFromHash() {
@@ -36,11 +86,25 @@
     return story.kind === "folklore" || story.kind === "urban-legend";
   }
 
+  function matchesPlace(story) {
+    if (continent && story.continent !== continent) return false;
+    if (country && story.countryShort !== country) return false;
+    return true;
+  }
+
+  function matchesProgress(story) {
+    if (progress === "all") return true;
+    if (progress === "done") return isDone(story.id);
+    return !isDone(story.id);
+  }
+
   function matchesQuery(story) {
     if (!query) return true;
     const hay = [
       story.title,
       story.country,
+      story.countryShort,
+      story.continent,
       story.hook,
       story.story,
       story.kindLabel,
@@ -53,7 +117,93 @@
   }
 
   function visibleStories() {
-    return stories.filter((story) => matchesFilter(story) && matchesQuery(story));
+    return stories.filter(
+      (story) =>
+        matchesFilter(story) &&
+        matchesPlace(story) &&
+        matchesProgress(story) &&
+        matchesQuery(story)
+    );
+  }
+
+  function uniqueSorted(values) {
+    return Array.from(new Set(values.filter(Boolean))).sort(function (a, b) {
+      return a.localeCompare(b);
+    });
+  }
+
+  function continentsInData() {
+    return uniqueSorted(stories.map((story) => story.continent));
+  }
+
+  function countriesInData(forContinent) {
+    return uniqueSorted(
+      stories
+        .filter((story) => !forContinent || story.continent === forContinent)
+        .map((story) => story.countryShort)
+    );
+  }
+
+  function fillSelect(select, allLabel, values, current) {
+    const keep = values.indexOf(current) !== -1 ? current : "";
+    select.innerHTML =
+      '<option value="">' +
+      esc(allLabel) +
+      "</option>" +
+      values
+        .map(function (value) {
+          return '<option value="' + esc(value) + '">' + esc(value) + "</option>";
+        })
+        .join("");
+    select.value = keep;
+    return keep;
+  }
+
+  function populatePlaceFilters() {
+    fillSelect(continentEl, "All continents", continentsInData(), continent);
+    country = fillSelect(
+      countryEl,
+      "All countries",
+      countriesInData(continent),
+      country
+    );
+  }
+
+  function updateCount() {
+    if (!countEl) return;
+    const total = stories.length;
+    const todo = stories.filter((story) => !isDone(story.id)).length;
+    countEl.textContent = todo + " of " + total + " to do";
+  }
+
+  function doneMarkup(id, extraClass) {
+    const checked = isDone(id) ? " checked" : "";
+    return (
+      '<label class="done-check' +
+      (extraClass ? " " + extraClass : "") +
+      '" data-done-wrap>' +
+      '<input type="checkbox" data-done="' +
+      esc(id) +
+      '"' +
+      checked +
+      ">" +
+      "<span>Done</span>" +
+      "</label>"
+    );
+  }
+
+  function handleDoneClick(event) {
+    const wrap = event.target.closest("[data-done-wrap]");
+    if (!wrap) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    const input = wrap.querySelector("input[data-done]");
+    if (!input) return true;
+    const id = input.getAttribute("data-done");
+    const next = !isDone(id);
+    input.checked = next;
+    setDone(id, next);
+    return true;
   }
 
   function renderList() {
@@ -61,22 +211,26 @@
     listEl.innerHTML = shown
       .map((story) => {
         const crime = story.kind === "true-crime";
-        const country = story.country.split("(")[0].split(" — ")[0].trim();
-        const meta = country;
+        const countryLabel =
+          story.countryShort ||
+          story.country.split("(")[0].split(" — ")[0].trim();
         return (
-          '<a class="card' +
+          '<article class="card' +
           (crime ? " is-crime" : "") +
-          '" href="#/story/' +
-          encodeURIComponent(story.id) +
+          (isDone(story.id) ? " is-done" : "") +
           '" data-id="' +
           esc(story.id) +
+          '">' +
+          doneMarkup(story.id) +
+          '<a class="card-main" href="#/story/' +
+          encodeURIComponent(story.id) +
           '">' +
           '<div class="card-meta">' +
           '<span class="pill">' +
           esc(story.kindLabel) +
           "</span>" +
           "<span>" +
-          esc(meta) +
+          esc(countryLabel) +
           "</span>" +
           "</div>" +
           "<h2>" +
@@ -85,11 +239,13 @@
           '<p class="hook">' +
           esc(story.hook) +
           "</p>" +
-          "</a>"
+          "</a>" +
+          "</article>"
         );
       })
       .join("");
     emptyEl.hidden = shown.length !== 0;
+    updateCount();
   }
 
   function sourceMarkup(source) {
@@ -134,6 +290,7 @@
       "<h1>" +
       esc(story.title) +
       "</h1>" +
+      doneMarkup(story.id, "reader-done") +
       '<div class="story-body">' +
       paragraphs +
       "</div>" +
@@ -206,20 +363,35 @@
       renderList();
       if (lastFocus) {
         const card = listEl.querySelector('[data-id="' + lastFocus + '"]');
-        if (card) card.focus();
+        if (card) {
+          const link = card.querySelector(".card-main") || card;
+          link.focus();
+        }
         lastFocus = null;
       }
     }
   }
 
+  function setChipState(group, active) {
+    group.forEach((chip) => {
+      const on = chip === active;
+      chip.classList.toggle("is-on", on);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
       filter = chip.getAttribute("data-filter") || "all";
-      chips.forEach((other) => {
-        const on = other === chip;
-        other.classList.toggle("is-on", on);
-        other.setAttribute("aria-pressed", on ? "true" : "false");
-      });
+      setChipState(chips, chip);
+      if (!storyIdFromHash()) renderList();
+    });
+  });
+
+  progressChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      progress = chip.getAttribute("data-progress") || "all";
+      setChipState(progressChips, chip);
       if (!storyIdFromHash()) renderList();
     });
   });
@@ -229,12 +401,34 @@
     if (!storyIdFromHash()) renderList();
   });
 
+  continentEl.addEventListener("change", () => {
+    continent = continentEl.value;
+    country = fillSelect(
+      countryEl,
+      "All countries",
+      countriesInData(continent),
+      country
+    );
+    if (!storyIdFromHash()) renderList();
+  });
+
+  countryEl.addEventListener("change", () => {
+    country = countryEl.value;
+    if (!storyIdFromHash()) renderList();
+  });
+
   listEl.addEventListener("click", (event) => {
+    if (handleDoneClick(event)) return;
     const card = event.target.closest("[data-id]");
     if (card) lastFocus = card.getAttribute("data-id");
   });
 
+  listEl.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("[data-done-wrap]")) event.stopPropagation();
+  });
+
   reader.addEventListener("click", (event) => {
+    if (handleDoneClick(event)) return;
     const button = event.target.closest("[data-copy]");
     if (!button) return;
     const id = storyIdFromHash();
@@ -257,9 +451,12 @@
     }
   }
 
+  loadDone();
   loadStories()
     .then((data) => {
       stories = data;
+      populatePlaceFilters();
+      updateCount();
       applyRoute();
     })
     .catch(() => {
