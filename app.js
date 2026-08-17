@@ -83,6 +83,7 @@
   function matchesFilter(story) {
     if (filter === "all") return true;
     if (filter === "true-crime") return story.kind === "true-crime";
+    if (filter === "creepypasta") return story.kind === "creepypasta";
     return story.kind === "folklore" || story.kind === "urban-legend";
   }
 
