@@ -60,7 +60,8 @@
     listEl.innerHTML = shown
       .map((story) => {
         const crime = story.kind === "true-crime";
-        const meta = [story.country, story.duration].filter(Boolean).join(" · ");
+        const country = story.country.split("(")[0].split(" — ")[0].trim();
+        const meta = [country, story.duration].filter(Boolean).join(" · ");
         return (
           '<a class="card' +
           (crime ? " is-crime" : "") +
@@ -193,6 +194,7 @@
     const id = storyIdFromHash();
     const story = id ? stories.find((item) => item.id === id) : null;
     if (id) {
+      archive.hidden = true;
       archive.setAttribute("aria-hidden", "true");
       reader.hidden = false;
       document.body.style.overflow = "hidden";
@@ -201,6 +203,7 @@
       const back = $("back");
       if (back) back.focus();
     } else {
+      archive.hidden = false;
       archive.removeAttribute("aria-hidden");
       reader.hidden = true;
       readerBody.innerHTML = "";
