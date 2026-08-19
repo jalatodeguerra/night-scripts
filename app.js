@@ -340,6 +340,18 @@
       "<details><summary>Sources</summary><ul>" +
       sources +
       "</ul></details>" +
+      '<details class="script-block"><summary>Script</summary>' +
+      (story.script
+        ? '<div class="note-body script-body">' +
+          (story.script || "")
+            .split(/\n\n+/)
+            .map(function (p) {
+              return "<p>" + esc(p) + "</p>";
+            })
+            .join("") +
+          "</div>"
+        : '<p class="note-body script-empty">No script yet.</p>') +
+      "</details>" +
       "</div>";
   }
 

@@ -621,6 +621,14 @@ summary:focus-visible {
   line-height: 1.65;
 }
 
+.script-body p + p {
+  margin-top: 0.9em;
+}
+
+.script-empty {
+  font-style: italic;
+}
+
 .notes ul {
   margin: 0 4px 18px;
   padding-left: 1.1em;
