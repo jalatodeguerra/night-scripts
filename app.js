@@ -89,6 +89,7 @@
     if (filter === "creepypasta") return story.kind === "creepypasta";
     if (filter === "cryptid") return story.kind === "cryptid";
     if (filter === "conspiracy") return story.kind === "conspiracy";
+    if (filter === "unsolved") return story.kind === "unsolved";
     return story.kind === "folklore" || story.kind === "urban-legend";
   }
 
